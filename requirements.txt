@@ -1,0 +1,4 @@
+Django==1.11.10
+pygithub==1.36
+django-bootstrap4==0.0.6
+coverage==4.5.1

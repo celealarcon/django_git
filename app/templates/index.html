@@ -1,0 +1,63 @@
+{% load bootstrap4 %}
+
+<html>
+	<head>
+		<title>Proyecto Prueba</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+		{% bootstrap_css %}
+		{% bootstrap_javascript %}
+		{% bootstrap_messages %}
+	</head>
+	<body>
+		<div style="margin-top:2%" class="container">
+			<!--Se muestra el botón para actualizar y el formulario para buscar algún repositorio por el nombre -->
+			<div style="margin-top:2%" class="row">
+				<div class="col-3">
+					<a class="btn btn-secondary" href="{% url 'update' %}">Última Actualización: {{ last_update.date }}</a>
+				</div>
+				<div class="col-5 offset-4">
+					<form method="post" class="form">
+						<div class="row">
+							<div class="col-8">
+							{% csrf_token %}
+							{% bootstrap_form form layout='inline' %}
+							</div>
+							<div class="col-4">
+							{% buttons %}
+								<button type="submit" class="btn btn-secondary">Buscar</button>
+							{% endbuttons %}
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-5"><h1>Proyecto Prueba Blizuu</h1></div>
+			</div>
+				<!-- Botones que redireccionan al método principal de views.py,
+					se les añade una variable que indica como se deben ordenar los repositorios mostrados-->
+				<div class="btn-group">
+					<form action="/" method="post">{% csrf_token %}
+						<input type="hidden" name="order" value="creation">
+						<button class="btn btn-primary">Ordenar por Fecha de Creación</button>
+					</form>
+					<form action="/" method="post">{% csrf_token %}
+						<input type="hidden" name="order" value="commit">
+						<button class="btn btn-primary">Ordenar por Último Commit</button>
+					</form>
+					<form action="/" method="post">{% csrf_token %}
+						<input type="hidden" name="order" value="none">
+						<button class="btn btn-primary">Mostrar Todos</button>
+					</form>
+				</div>
+			<!--Acá se listan los Repositorios obtenidos de la API pygithub -->
+			<ul class="list-group" style="margin-top:3%">
+			{% for repo in repos %}
+			 <li class="list-group-item">
+					<h4>{{ repo.name }}</h4>
+					<p><b>Creado en: </b> {{ repo.creation_date }}</p>
+					<p><b>Último Commit en: </b> {{ repo.last_commit_date }}</p>
+			</li>
+			{% endfor %}
+			</ul>
+		</div>
+	</body>
+</html>
